@@ -14,6 +14,12 @@ public class TodosController(TodoList todoList) : ControllerBase
     public IEnumerable<Services.Todo> Get()
     {
         return _todoList.GetTodos();
+    } 
+    
+    [HttpGet("search", Name = "SearchTodos")]
+    public IEnumerable<Services.Todo> Post([FromBody] string searchTerm)
+    {
+        return _todoList.SearchTodos(searchTerm);
     }
 
     [HttpGet("count", Name = "GetTodosLength")]

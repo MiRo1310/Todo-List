@@ -64,6 +64,11 @@ public class TodoList
         return _todos.FindIndex(todo => todo.Id == id);
     }
 
+    public IEnumerable<Todo> SearchTodos(string searchTerm)
+    {
+        return _todos.Where(todo => todo.Title.Contains(searchTerm) || todo.Description.Contains(searchTerm));
+    }
+
 
     private void SeedTodos()
     {
