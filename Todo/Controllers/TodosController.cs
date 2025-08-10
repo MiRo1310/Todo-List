@@ -14,8 +14,8 @@ public class TodosController(TodoList todoList) : ControllerBase
     public IEnumerable<Services.Todo> Get()
     {
         return _todoList.GetTodos();
-    } 
-    
+    }
+
     [HttpGet("search", Name = "SearchTodos")]
     public IEnumerable<Services.Todo> Post([FromBody] string searchTerm)
     {
@@ -27,9 +27,9 @@ public class TodosController(TodoList todoList) : ControllerBase
     {
         return _todoList.GetTodos().Count();
     }
-    
+
     [HttpGet("due", Name = "GetTodosByDueDate")]
-    public IEnumerable<Services.Todo>  Post([FromBody] DateTime dateTime)
+    public IEnumerable<Services.Todo> Post([FromBody] DateTime dateTime)
     {
         return _todoList.GetTodosByDueDate(dateTime);
     }
@@ -41,8 +41,8 @@ public class TodosController(TodoList todoList) : ControllerBase
         return Ok("Todo added successfully");
     }
 
-    [HttpPost("remove", Name = "RemoveTodo")]
-    public IActionResult Post([FromBody] Guid id)
+    [HttpPost("delete", Name = "RemoveTodo")]
+    public IActionResult Delete(Guid id)
     {
         var result = _todoList.RemoveTodo(id);
 
@@ -72,7 +72,7 @@ public class TodosController(TodoList todoList) : ControllerBase
 
         return ToActionResult(result);
     }
-    
+
 
     private IActionResult ToActionResult(OperationResult result)
     {
