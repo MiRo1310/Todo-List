@@ -27,6 +27,12 @@ public class TodosController(TodoList todoList) : ControllerBase
     {
         return _todoList.GetTodos().Count();
     }
+    
+    [HttpGet("due", Name = "GetTodosByDueDate")]
+    public IEnumerable<Services.Todo>  Post([FromBody] DateTime dateTime)
+    {
+        return _todoList.GetTodosByDueDate(dateTime);
+    }
 
     [HttpPost(Name = "AddTodo")]
     public IActionResult Post([FromBody] Services.Todo todo)

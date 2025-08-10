@@ -21,6 +21,11 @@ public class TodoList
         _todos.Add(todo);
     }
 
+    public IEnumerable<Todo> GetTodosByDueDate(DateTime dateTime)
+    {
+        return _todos.Where(todo => todo.DueDate >= dateTime);
+    }
+
     public OperationResult RemoveTodo(Guid id)
     {
         var index = GetIndexOf(id);
