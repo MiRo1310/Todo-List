@@ -1,12 +1,17 @@
 <script lang="ts" setup>
-import {onMounted, ref} from 'vue';
-
+import {onMounted, ref, watch} from 'vue';
 import {useTodos} from "./lib/todos/todos.ts";
 import type {Todo} from "./types/types.ts";
 
+
 const count = ref(0);
 const todos = ref<Todo[]>([]);
-const {getCount, getTodos, addTodo, removeTodo} = useTodos()
+const search = ref('');
+const title = ref('');
+const description = ref('');
+const dueDate = ref<Date | null>(null);
+
+const {getCount, getTodos, addTodo, removeTodo, toggleStatus, searchTodos} = useTodos()
 onMounted(async () => {
       await updateValues()
     }
@@ -17,18 +22,21 @@ const updateValues = async () => {
   todos.value = await getTodos()
 }
 
-
-const title = ref('');
-const description = ref('');
-const dueDate = ref<Date | null>(null);
-
 const add = async () => {
   if (!title.value) return
   await addTodo({
     title: title.value,
     description: description.value,
-    dueDate: String(dueDate.value)
+    dueDate: dueDate.value
   })
+  title.value = '';
+  description.value = '';
+  dueDate.value = null;
+  await updateValues()
+}
+
+const toggle = async (todo: Todo) => {
+  await toggleStatus(todo.id, !todo.isCompleted)
   await updateValues()
 }
 
@@ -36,12 +44,30 @@ const removeItem = async (id: string) => {
   await removeTodo(id)
   await updateValues()
 }
+
+let debouncedTimeout: null | number = null;
+
+watch(search, () => {
+  if (debouncedTimeout) clearTimeout(debouncedTimeout)
+  debouncedTimeout = setTimeout(async () => {
+    todos.value =
+        search.value === "" ? await getTodos() : await searchTodos(search.value)
+    count.value = await getCount()
+    debouncedTimeout = null
+  }, 500)
+
+})
+
 </script>
 
 <template>
 
   <div class="table-wrapper">
-    <p>Es sind {{ count }} todos vorhanden</p>
+    <div class="flex items-center gap-2 mb-6">
+      <p>Es sind {{ count }} todos vorhanden</p>
+      <input v-model="search" :placeholder="'Suche nach '" class="max-w-48">
+      <button class="button" @click="search =''">X</button>
+    </div>
     <table>
       <thead>
       <tr>
@@ -58,6 +84,7 @@ const removeItem = async (id: string) => {
         <th>Id</th>
         <th>Title</th>
         <th>Beschreibung</th>
+        <th>Erstellt am</th>
         <th>Fälligkeitsdatum</th>
         <th>Erledigt</th>
         <th> Löschen</th>
@@ -75,10 +102,14 @@ const removeItem = async (id: string) => {
           {{ todo.description }}
         </td>
         <td>
-          {{ todo.dueDate ?? "" }}
+          {{ new Date(todo.createdAt).toLocaleString() }}
+        </td>
+        <td>
+          {{ todo.dueDate ? new Date(todo.dueDate).toLocaleString() : "" }}
         </td>
         <td>
           {{ todo.isCompleted }}
+          <button class="button" @click="toggle(todo)">Toggle</button>
         </td>
         <td>
           <button class="button" @click="removeItem(todo.id)">Del</button>

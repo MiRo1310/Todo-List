@@ -16,9 +16,9 @@ public class TodoList
         return _todos;
     }
 
-    public void AddTodo(Todo todo)
+    public void AddTodo(CreateTodoRequest todo)
     {
-        _todos.Add(todo);
+        _todos.Add(new Todo(todo.Title, todo.Description, todo.DueDate));
     }
 
     public IEnumerable<Todo> GetTodosByDueDate(DateTime dateTime)
@@ -69,16 +69,16 @@ public class TodoList
         return _todos.FindIndex(todo => todo.Id == id);
     }
 
-    public IEnumerable<Todo> SearchTodos(string searchTerm)
+    public IEnumerable<Todo> SearchTodos(string search)
     {
-        return _todos.Where(todo => todo.Title.Contains(searchTerm) || todo.Description.Contains(searchTerm));
+        return _todos.Where(todo => todo.Title.Contains(search) || todo.Description.Contains(search));
     }
 
 
     private void SeedTodos()
     {
         if (_todos.Count > 0) return;
-        _todos.Add(new Todo("Erste Aufgabe", "Beschreibung der ersten"));
-        _todos.Add(new Todo("Zweite Aufgabe", "Beschreibung der zweiten"));
+        _todos.Add(new Todo("Erste Aufgabe", "Beschreibung der ersten", null));
+        _todos.Add(new Todo("Zweite Aufgabe", "Beschreibung der zweiten", null));
     }
 }

@@ -16,10 +16,10 @@ public class TodosController(TodoList todoList) : ControllerBase
         return _todoList.GetTodos();
     }
 
-    [HttpGet("search", Name = "SearchTodos")]
-    public IEnumerable<Services.Todo> Post([FromBody] string searchTerm)
+    [HttpPost("search", Name = "SearchTodos")]
+    public IEnumerable<Services.Todo> Post([FromBody] string search)
     {
-        return _todoList.SearchTodos(searchTerm);
+        return _todoList.SearchTodos(search);
     }
 
     [HttpGet("count", Name = "GetTodosLength")]
@@ -35,21 +35,21 @@ public class TodosController(TodoList todoList) : ControllerBase
     }
 
     [HttpPost(Name = "AddTodo")]
-    public IActionResult Post([FromBody] Services.Todo todo)
+    public IActionResult Post([FromBody] CreateTodoRequest todo)
     {
         _todoList.AddTodo(todo);
-        return Ok("Todo added successfully");
+        return Ok(new { message = "Todo added successfully" });
     }
 
-    [HttpPost("delete", Name = "RemoveTodo")]
-    public IActionResult Delete(Guid id)
+    [HttpDelete("delete", Name = "RemoveTodo")]
+    public IActionResult Delete([FromQuery] Guid id)
     {
         var result = _todoList.RemoveTodo(id);
 
         return ToActionResult(result);
     }
 
-    [HttpPost("status", Name = "SetTodoStatus")]
+    [HttpPut("status", Name = "SetTodoStatus")]
     public IActionResult Post([FromBody] SetStatus status)
     {
         var result = _todoList.SetStatus(status);
@@ -76,7 +76,7 @@ public class TodosController(TodoList todoList) : ControllerBase
 
     private IActionResult ToActionResult(OperationResult result)
     {
-        if (!result.IsSuccess) return NotFound(result.Message);
-        return Ok(result.Message);
+        if (!result.IsSuccess) return NotFound(result);
+        return Ok(result);
     }
 }

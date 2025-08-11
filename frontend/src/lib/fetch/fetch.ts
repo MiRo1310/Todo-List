@@ -2,15 +2,19 @@
 
 type Endpoint = "count" | "delete" | "search" | "due" | "status" | "update" | "clear"
 type Method = "GET" | "POST" | "PUT" | "DELETE";
-export const request = async ({endpoint, method = "GET", body}: {
+export const request = async ({endpoint, method = "GET", body, query}: {
     endpoint?: Endpoint,
     method?: Method,
     body?: unknown
+    query?: Record<string, string>
 }) => {
 
     let url = config.url
     if (endpoint) {
         url += `${endpoint}`;
+    }
+    if (query) {
+        url += `?${new URLSearchParams(query).toString()}`;
     }
     console.log(url, {
         method,

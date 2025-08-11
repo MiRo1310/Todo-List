@@ -15,9 +15,16 @@ export const useTodos = () => {
     }
 
     const removeTodo = async (id: string): Promise<void> => {
-        const body = {id: id}
-        await request({"method": "DELETE", endpoint: `delete`, body})
-
+        const query = {id: id}
+        await request({"method": "DELETE", endpoint: `delete`, query})
     }
-    return {getCount, getTodos, addTodo, removeTodo}
+
+    const searchTodos = async (search: string) => {
+        return request({"method": "POST", endpoint: "search", body: search})
+    }
+
+    const toggleStatus = async (id: string, status: boolean): Promise<void> => {
+        await request({"method": "PUT", endpoint: `status`, body: {id, status}})
+    }
+    return {getCount, getTodos, addTodo, removeTodo, toggleStatus, searchTodos}
 }

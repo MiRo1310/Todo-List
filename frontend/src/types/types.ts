@@ -9,6 +9,6 @@
 
 export interface AddTodo {
     title: string;
-    dueDate?: string;
+    dueDate?: Date | null;
     description?: string;
 }
