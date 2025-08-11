@@ -1,7 +1,7 @@
 ﻿import {config} from "../../config/config.ts";
 
 type Endpoint = "count" | "delete" | "search" | "due" | "status" | "update" | "clear"
-type Method = "GET" | "POST" | "PUT" | "DELETE";
+type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 export const request = async ({endpoint, method = "GET", body, query}: {
     endpoint?: Endpoint,
     method?: Method,

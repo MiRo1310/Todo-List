@@ -11,7 +11,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="obj\Debug\" />
+        <Folder Include="obj\Debug\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="obj\project.assets.json"/>
     </ItemGroup>
 
 </Project>

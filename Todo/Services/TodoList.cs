@@ -4,24 +4,24 @@ namespace Todo.Services;
 
 public class TodoList
 {
-    private readonly List<Todo> _todos = [];
+    private readonly List<Models.Todo> _todos = [];
 
     public TodoList()
     {
         SeedTodos();
     }
 
-    public IEnumerable<Todo> GetTodos()
+    public IEnumerable<Models.Todo> GetTodos()
     {
         return _todos;
     }
 
     public void AddTodo(CreateTodoRequest todo)
     {
-        _todos.Add(new Todo(todo.Title, todo.Description, todo.DueDate));
+        _todos.Add(new Models.Todo(todo.Title, todo.Description, todo.DueDate));
     }
 
-    public IEnumerable<Todo> GetTodosByDueDate(DateTime dateTime)
+    public IEnumerable<Models.Todo> GetTodosByDueDate(DateTime dateTime)
     {
         return _todos.Where(todo => todo.DueDate >= dateTime);
     }
@@ -58,7 +58,7 @@ public class TodoList
         return new OperationResult(true, "Todo updated successfully");
     }
 
-    public OperationResult DeleteTodo()
+    public OperationResult ClearTodo()
     {
         _todos.Clear();
         return new OperationResult(true, "All todos cleared successfully");
@@ -69,7 +69,7 @@ public class TodoList
         return _todos.FindIndex(todo => todo.Id == id);
     }
 
-    public IEnumerable<Todo> SearchTodos(string search)
+    public IEnumerable<Models.Todo> SearchTodos(string search)
     {
         return _todos.Where(todo => todo.Title.Contains(search) || todo.Description.Contains(search));
     }
@@ -78,7 +78,7 @@ public class TodoList
     private void SeedTodos()
     {
         if (_todos.Count > 0) return;
-        _todos.Add(new Todo("Erste Aufgabe", "Beschreibung der ersten", null));
-        _todos.Add(new Todo("Zweite Aufgabe", "Beschreibung der zweiten", null));
+        _todos.Add(new Models.Todo("Erste Aufgabe", "Beschreibung der ersten", null));
+        _todos.Add(new Models.Todo("Zweite Aufgabe", "Beschreibung der zweiten", null));
     }
 }

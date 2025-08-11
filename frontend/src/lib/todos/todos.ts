@@ -24,7 +24,7 @@ export const useTodos = () => {
     }
 
     const toggleStatus = async (id: string, status: boolean): Promise<void> => {
-        await request({"method": "PUT", endpoint: `status`, body: {id, status}})
+        await request({"method": "PATCH", endpoint: `status`, body: {id, status}})
     }
     return {getCount, getTodos, addTodo, removeTodo, toggleStatus, searchTodos}
 }
